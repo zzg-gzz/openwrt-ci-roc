@@ -171,3 +171,33 @@ sed -i "s/${orig_version}/R${date_version} by Haiibo/g" package/lean/default-set
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
+
+
+# ==========================================
+# 终极魔法：注入预编译的 Athena LED APK 并在首次开机自动安装
+# ==========================================
+
+# 1. 物理超度：以防万一，删掉系统自带的 LED 源码目录
+rm -rf package/luci-app-athena-led
+
+# 2. 建立 OpenWrt 的自定义文件覆盖目录 (固件打包时会自动塞进系统)
+mkdir -p files/root/
+mkdir -p files/etc/uci-defaults/
+
+# 3. 把你的专属 APK 下载到固件的 /root 目录下
+wget -O files/root/athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.2.4/luci-app-athena-led-2.2.4-1_all.ipk
+
+# 4. 写入 uci-defaults 首次开机自启脚本
+# （这个脚本会在路由器第一次开机时默默运行，装好插件后自动销毁，不留痕迹）
+cat << "EOF" > files/etc/uci-defaults/99-install-led
+#!/bin/sh
+# 允许安装本地未签名的 apk 包
+opkg install /root/athena-led.ipk
+# 安装完清理安装包和本脚本，释放空间
+rm -f /root/athena-led.ipk
+rm -f /etc/uci-defaults/99-install-led
+exit 0
+EOF
+
+# 5. 给自启脚本赋予执行权限
+chmod +x files/etc/uci-defaults/99-install-led
