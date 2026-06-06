@@ -1,4 +1,4 @@
-name: JDCloud-ImmortalWrt
+name: DIY-JDCloud-ImmortalWrt
 
 on:
   workflow_dispatch:
@@ -178,7 +178,7 @@ jobs:
           - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}
-          - 🌐 默认地址: **192.168.9.1**
+          - 🌐 默认地址: **${{ env.WRT_IP }}**
           - 🔑 默认密码: none
           ### 🧊 固件版本
           - 固件内核版本：**${{ env.VERSION_KERNEL }}**
