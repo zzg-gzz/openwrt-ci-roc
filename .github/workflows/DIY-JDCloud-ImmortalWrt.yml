@@ -2,6 +2,28 @@ name: JDCloud-ImmortalWrt
 
 on:
   workflow_dispatch:
+    inputs:
+      WRT_NAME:
+        description: '固件名称'
+        required: false
+        default: 'Roc'
+        type: string
+      WRT_SSID:
+        description: 'WIfi-SSID'
+        required: false
+        default: 'CHEN'
+        type: string
+      WRT_WORD:
+        description: 'Wifi密码'
+        required: false
+        default: '12345678'
+        type: string
+      WRT_IP: 
+        description: '路由管理IP'
+        required: false
+        default: '192.168.9.1'
+        type: string
+              
   workflow_call:
   # schedule:
   #   - cron: "0 18 * * *"
@@ -15,6 +37,10 @@ env:
   CLASH_KERNEL: amd64
   FIRMWARE_TAG: JDCloud
   TZ: Asia/Shanghai
+  WRT_NAME: ${{inputs.WRT_NAME}}
+  WRT_SSID: ${{inputs.WRT_SSID}}
+  WRT_WORD: ${{inputs.WRT_WORD}}
+  WRT_IP: ${{inputs.WRT_IP}}
 
 jobs:
   Build:
@@ -91,11 +117,11 @@ jobs:
           done
         fi
 
-    - name: Install Feeds(安装feeds)
-      run: |
-        cd $OPENWRT_PATH
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
+    #- name: Install Feeds(安装feeds)
+    #  run: |
+    #    cd $OPENWRT_PATH
+    #    ./scripts/feeds update -a
+    #    ./scripts/feeds install -a
   
     - name: Load Custom Configuration(加载自定义配置)
       run: |
