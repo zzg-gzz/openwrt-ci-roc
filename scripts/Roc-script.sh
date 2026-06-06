@@ -213,7 +213,7 @@ UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 #  from  OpenWRT-CI-breeze303/diy-script.sh
 # 添加额外插件
 git clone --depth=1 https://github.com/kongfl888/luci-app-adguardhome package/luci-app-adguardhome
-git clone --depth=1 -b openwrt-18.06 https://github.com/tty228/luci-app-wechatpush package/luci-app-serverchan
+#git clone --depth=1 -b openwrt-18.06 https://github.com/tty228/luci-app- package/luci-app-serverchan
 git clone --depth=1 https://github.com/ilxp/luci-app-ikoolproxy package/luci-app-ikoolproxy
 git clone --depth=1 https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
 git clone --depth=1 https://github.com/destan19/OpenAppFilter package/OpenAppFilter
@@ -273,7 +273,7 @@ mkdir -p files/root/
 mkdir -p files/etc/uci-defaults/
 
 # 3. 把你的专属 APK 下载到固件的 /root 目录下
-wget -O files/root/athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.2.4/luci-app-athena-led-2.2.4-1_all.ipk
+wget -O files/root/athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.2.4/luci-app-athena-led_2.2.4-1_all.ipk
 
 # 4. 写入 uci-defaults 首次开机自启脚本
 # （这个脚本会在路由器第一次开机时默默运行，装好插件后自动销毁，不留痕迹）
@@ -282,7 +282,7 @@ cat << "EOF" > files/etc/uci-defaults/99-install-led
 # 允许安装本地未签名的 apk 包
 opkg install /root/athena-led.ipk
 # 安装完清理安装包和本脚本，释放空间
-rm -f /root/athena-led.ipk
+#rm -f /root/athena-led.ipk
 rm -f /etc/uci-defaults/99-install-led
 exit 0
 EOF
