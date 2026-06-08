@@ -157,8 +157,7 @@ jobs:
         ls -lah
         cp $OPENWRT_PATH/.config Arthur.Athena.config
         mv config.buildinfo Arthur.Athena.config.buildinfo
-        MANIFEST=$(find . -maxdepth 1 -name "*.manifest" | head -n1)
-        [ -n "$MANIFEST" ] && mv "$MANIFEST" Arthur.Athena.manifest
+        
         mkdir -p packages
         find $OPENWRT_PATH/bin/packages -name "*.ipk" -exec cp {} packages/ \;
         tar -zcf Arthur.Athena.Packages.tar.gz packages
