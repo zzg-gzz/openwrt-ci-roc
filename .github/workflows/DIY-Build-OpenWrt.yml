@@ -74,8 +74,8 @@ defaults:
     shell: bash
 
 env:
-  GENERAL_CONFIG_FILE: configs/General.config
-  DIY_SCRIPT: scripts/Roc-script.sh
+  GENERAL_CONFIG_FILE: configs/DIY-General.config
+  DIY_SCRIPT: scripts/DIY-script.sh
   TZ: Asia/Shanghai
 
 jobs:
