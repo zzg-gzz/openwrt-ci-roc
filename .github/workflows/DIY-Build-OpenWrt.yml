@@ -3,27 +3,6 @@ name: DIY-Build-OpenWrt
 on:
   workflow_call:
     inputs:
-      WRT_NAME:
-        description: '固件名称'
-        required: false
-        default: 'Roc'
-        type: string
-      WRT_SSID:
-        description: 'WIfi-SSID'
-        required: false
-        default: 'CHEN'
-        type: string
-      WRT_WORD:
-        description: 'Wifi密码'
-        required: false
-        default: '12345678'
-        type: string
-      WRT_IP: 
-        description: '路由管理IP'
-        required: false
-        default: '192.168.9.1'
-        type: string
-        
       repo_url:
         required: true
         type: string
