@@ -2,10 +2,47 @@ name: DIY-JDCloud-LibWrt
 
 on:
   workflow_dispatch:
+    inputs:
+      REPO_BRANCH:
+        options:
+          - 'main-nss'
+          - '25.12-nss'
+        description: '源码分支'
+        required: true
+        default: 'main-nss'
+        type: choice
+      WRT_NAME:
+        description: '固件名称'
+        required: false
+        default: 'Roc'
+        type: string
+      WRT_SSID:
+        description: 'WIfi-SSID'
+        required: false
+        default: 'CHEN'
+        type: string
+      WRT_WORD:
+        description: 'Wifi密码'
+        required: false
+        default: '12345678'
+        type: string
+      WRT_IP: 
+        description: '路由管理IP'
+        required: false
+        default: '192.168.9.1'
+        type: string
+        
   workflow_call:
   # schedule:
   #   - cron: "0 18 * * *"
 
+env:
+  # REPO_BRANCH: ${{inputs.REPO_BRANCH}}
+  WRT_NAME: ${{inputs.WRT_NAME}}
+  WRT_SSID: ${{inputs.WRT_SSID}}
+  WRT_WORD: ${{inputs.WRT_WORD}}
+  WRT_IP: ${{inputs.WRT_IP}}
+  
 permissions:
   contents: write
   actions: write
@@ -18,7 +55,7 @@ jobs:
       actions: write
     with:
       repo_url: https://github.com/laipeng668/openwrt-6.x.git
-      repo_branch: main-nss
+      repo_branch: ${{inputs.REPO_BRANCH}}
       config_file: configs/DIY-JDCloud.config
       firmware_tag: IPQ60XX
       kernel_file: kernel-6.12
