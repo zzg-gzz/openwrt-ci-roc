@@ -1,6 +1,6 @@
 name: Trigger-All-Workflows
 
-on:
+#on:
 #  workflow_dispatch:
 #  schedule:
 #    - cron: "0 18 * * 5"
