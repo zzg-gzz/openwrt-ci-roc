@@ -14,7 +14,7 @@ on:
       WRT_NAME:
         description: '固件名称'
         required: false
-        default: 'Roc'
+        default: 'Lib'
         type: string
       WRT_SSID:
         description: 'WIfi-SSID'
@@ -56,7 +56,7 @@ jobs:
     with:
       repo_url: https://github.com/laipeng668/openwrt-6.x.git
       repo_branch: ${{inputs.REPO_BRANCH}}
-      config_file: configs/DIY-JDCloud.config
+      config_file: configs/DIY-JDCloud-LibWRT.config
       firmware_tag: IPQ60XX
       kernel_file: kernel-6.12
       artifact_prefix: IPQ60XX
