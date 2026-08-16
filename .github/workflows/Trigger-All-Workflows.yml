@@ -33,12 +33,12 @@ on:
         required: false
         type: boolean
         default: true
-  schedule:
-    - cron: "0 18 * * 5"
+#  schedule:
+#    - cron: "0 18 * * 5"
 
 permissions:
-  contents: read
-  actions: read
+  contents: write
+  actions: write
 
 jobs:
 
