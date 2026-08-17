@@ -38,7 +38,7 @@ on:
       delete_old_workflows:
         required: false
         type: boolean
-        default: false
+        default: true
       package_extension:
         required: false
         type: string
