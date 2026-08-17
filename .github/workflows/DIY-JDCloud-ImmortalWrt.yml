@@ -55,6 +55,11 @@ jobs:
       contents: write
       actions: write
     with:
+      # ===== 新增：将主 YAML 的 inputs 传给子工作流 =====
+      wrt_name: ${{ inputs.WRT_NAME }}
+      wrt_ssid: ${{ inputs.WRT_SSID }}
+      wrt_word: ${{ inputs.WRT_WORD }}
+      wrt_ip: ${{ inputs.WRT_IP }}
       repo_url: https://github.com/laipeng668/immortalwrt.git
       repo_branch: ${{inputs.REPO_BRANCH}}
       config_file: configs/DIY-JDCloud.config
