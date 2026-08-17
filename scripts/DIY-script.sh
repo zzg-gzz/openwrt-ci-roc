@@ -7,7 +7,7 @@ sed -i 's/downloads.immortalwrt.org/mirror.nju.edu.cn\/immortalwrt/g' package/ba
 # sed -i "s/hostname='.*'/hostname='Roc'/g" package/base-files/files/bin/config_generate
 
 #修改immortalwrt.lan关联IP
-sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
+#sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 
 # 修改Wifi设置
 WIFI_SH=$(find ./target/linux/{mediatek/filogic,qualcommax}/base-files/etc/uci-defaults/ -type f -name "*set-wireless.sh" 2>/dev/null)
