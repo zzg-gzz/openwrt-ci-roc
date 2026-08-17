@@ -43,6 +43,23 @@ on:
         required: false
         type: string
         default: ipk
+      # ===== 新增：接收主 YAML 传过来的参数 =====
+      wrt_name:
+        required: false
+        type: string
+        default: 'Roc'
+      wrt_ssid:
+        required: false
+        type: string
+        default: 'CHEN'
+      wrt_word:
+        required: false
+        type: string
+        default: '12345678'
+      wrt_ip:
+        required: false
+        type: string
+        default: '192.168.9.1'
 
 permissions:
   contents: write
@@ -56,6 +73,11 @@ env:
   GENERAL_CONFIG_FILE: configs/DIY-General.config
   DIY_SCRIPT: scripts/DIY-script.sh
   TZ: Asia/Shanghai
+  WRT_NAME: ${{ inputs.wrt_name }}
+  WRT_SSID: ${{ inputs.wrt_ssid }}
+  WRT_WORD: ${{ inputs.wrt_word }}
+  WRT_IP: ${{ inputs.wrt_ip }}
+#在子工作流顶部统一映射为 env（这样脚本与表达式都能读取）
 
 jobs:
   Build:
@@ -258,7 +280,7 @@ jobs:
           - 💻 这是 ${{ inputs.firmware_tag }} 平台使用的 OpenWrt 固件
           - ⚽ 固件源码: ${{ inputs.repo_url }}
           - 💝 源码分支: ${{ inputs.repo_branch }}
-          - 🌐 默认地址: **${{ env.WRT_IP }}**
+          - 🌐 默认地址: **${{ env.WRT_IP }}**   #也可以写${{ inputs.wrt_ip }}
           - 🔑 默认密码: none
           ### 🧊 固件版本
           - 固件内核版本：**${{ env.VERSION_KERNEL }}**
