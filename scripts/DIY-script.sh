@@ -114,8 +114,8 @@ git clone --depth=1 https://github.com/tty228/luci-app-wechatpush package/luci-a
 git clone --depth=1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 git clone --depth=1 https://github.com/laipeng668/luci-app-gecoosac package/luci-app-gecoosac
 #git clone --depth=1 https://github.com/NONGFAH/luci-app-athena-led package/luci-app-athena-led
-git clone --depth=1 https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller package/luci-app-athena-led
-chmod +x package/luci-app-athena-led/root/etc/init.d/athena_led package/luci-app-athena-led/root/usr/sbin/athena-led
+#git clone --depth=1 https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller package/luci-app-athena-led
+#chmod +x package/luci-app-athena-led/root/etc/init.d/athena_led package/luci-app-athena-led/root/usr/sbin/athena-led
 
 ### PassWall & OpenClash ###
 
@@ -194,7 +194,7 @@ UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 
 UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 
-UPDATE_PACKAGE "athena-led" "unraveloop/JDC-AX6600-Athena-LED-Controller" "main"
+#UPDATE_PACKAGE "athena-led" "unraveloop/JDC-AX6600-Athena-LED-Controller" "main"
 UPDATE_PACKAGE "ddns-go" "sirpdboy/luci-app-ddns-go" "main"
 UPDATE_PACKAGE "diskman" "sbwml/luci-app-diskman" "main"
 UPDATE_PACKAGE "diskmanager" "4IceG/luci-app-mini-diskmanager" "main"
@@ -253,3 +253,35 @@ git_sparse_clone main https://github.com/linkease/istore luci
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
+
+# ==========================================
+# 终极魔法：注入预编译的 Athena LED APK 并在首次开机自动安装
+# ==========================================
+
+# 1. 物理超度：以防万一，删掉系统自带的 LED 源码目录
+rm -rf package/luci-app-athena-led
+
+# 2. 建立 OpenWrt 的自定义文件覆盖目录 (固件打包时会自动塞进系统)
+mkdir -p files/root/
+mkdir -p files/etc/uci-defaults/
+
+# 3. 把你的专属 APK 下载到固件的 /root 目录下
+wget -O files/root/athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.4.0/athena-led_2.4.0-1_aarch64_cortex-a53.ipk
+wget -O files/root/luci-athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.4.0/luci-app-athena-led_2.4.0-1_all.ipk
+
+# 4. 写入 uci-defaults 首次开机自启脚本
+# （这个脚本会在路由器第一次开机时默默运行，装好插件后自动销毁，不留痕迹）
+cat << "EOF" > files/etc/uci-defaults/99-install-led
+#!/bin/sh
+# 允许安装本地未签名的 apk 包
+opkg install /root/athena-led.ipk
+opkg install /root/luci-athena-led.ipk
+# 安装完清理安装包和本脚本，释放空间
+#rm -f /root/athena-led.ipk
+#rm -f /root/luci-athena-led.ipk
+rm -f /etc/uci-defaults/99-install-led
+exit 0
+EOF
+
+# 5. 给自启脚本赋予执行权限
+chmod +x files/etc/uci-defaults/99-install-led
