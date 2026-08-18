@@ -194,7 +194,7 @@ UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 
 UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 
-#UPDATE_PACKAGE "athena-led" "unraveloop/JDC-AX6600-Athena-LED-Controller" "main"
+UPDATE_PACKAGE "athena-led" "unraveloop/JDC-AX6600-Athena-LED-Controller" "main"
 UPDATE_PACKAGE "ddns-go" "sirpdboy/luci-app-ddns-go" "main"
 UPDATE_PACKAGE "diskman" "sbwml/luci-app-diskman" "main"
 UPDATE_PACKAGE "diskmanager" "4IceG/luci-app-mini-diskmanager" "main"
@@ -215,7 +215,6 @@ UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 #  from  OpenWRT-CI-breeze303/diy-script.sh
 # 添加额外插件
 git clone --depth=1 https://github.com/kongfl888/luci-app-adguardhome package/luci-app-adguardhome
-#git clone --depth=1 -b openwrt-18.06 https://github.com/tty228/luci-app- package/luci-app-serverchan
 git clone --depth=1 https://github.com/ilxp/luci-app-ikoolproxy package/luci-app-ikoolproxy
 git clone --depth=1 https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
 git clone --depth=1 https://github.com/destan19/OpenAppFilter package/OpenAppFilter
@@ -231,11 +230,9 @@ git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages packa
 git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
 
 # Themes
-git clone --depth=1 -b 18.06 https://github.com/kiddin9/luci-theme-edge package/luci-theme-edge
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
-git clone --depth=1 https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom package/luci-theme-infinityfreedom
-git_sparse_clone main https://github.com/haiibo/packages luci-theme-atmaterial luci-theme-opentomcat luci-theme-netgear
+
 
 # 更改 Argon 主题背景
 cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
@@ -256,33 +253,3 @@ git_sparse_clone main https://github.com/linkease/istore luci
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
-
-
-# ==========================================
-# 终极魔法：注入预编译的 Athena LED APK 并在首次开机自动安装
-# ==========================================
-
-# 1. 物理超度：以防万一，删掉系统自带的 LED 源码目录
-rm -rf package/luci-app-athena-led
-
-# 2. 建立 OpenWrt 的自定义文件覆盖目录 (固件打包时会自动塞进系统)
-mkdir -p files/root/
-mkdir -p files/etc/uci-defaults/
-
-# 3. 把你的专属 APK 下载到固件的 /root 目录下
-wget -O files/root/athena-led.ipk https://github.com/unraveloop/JDC-AX6600-Athena-LED-Controller/releases/download/v2.2.4/luci-app-athena-led_2.2.4-1_all.ipk
-
-# 4. 写入 uci-defaults 首次开机自启脚本
-# （这个脚本会在路由器第一次开机时默默运行，装好插件后自动销毁，不留痕迹）
-cat << "EOF" > files/etc/uci-defaults/99-install-led
-#!/bin/sh
-# 允许安装本地未签名的 apk 包
-opkg install /root/athena-led.ipk
-# 安装完清理安装包和本脚本，释放空间
-#rm -f /root/athena-led.ipk
-rm -f /etc/uci-defaults/99-install-led
-exit 0
-EOF
-
-# 5. 给自启脚本赋予执行权限
-chmod +x files/etc/uci-defaults/99-install-led
