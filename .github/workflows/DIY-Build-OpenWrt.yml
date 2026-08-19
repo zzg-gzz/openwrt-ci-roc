@@ -211,6 +211,35 @@ jobs:
         fi
         make defconfig
         make download -j"$(nproc)"
+        
+    - name: Customize WiFi Settings
+      run: |
+        mkdir -p package/base-files/files/etc/uci-defaults/
+        cat << 'EOF' > package/base-files/files/etc/uci-defaults/99-custom-wifi
+        #!/bin/sh
+
+        # radio0
+        uci set wireless.radio0.disabled='0'
+        uci set wireless.default_radio0.ssid="${WRT_SSID}"
+        uci set wireless.default_radio0.encryption='psk2'
+        uci set wireless.default_radio0.key="${WRT_WORD}"
+
+        # radio1
+        uci set wireless.radio1.disabled='0'
+        uci set wireless.default_radio1.ssid="${WRT_SSID}_5G"
+        uci set wireless.default_radio1.encryption='psk2'
+        uci set wireless.default_radio1.key="${WRT_WORD}"
+
+        # radio2
+        uci set wireless.radio2.disabled='0'
+        uci set wireless.default_radio2.ssid="${WRT_SSID}_5G2"
+        uci set wireless.default_radio2.encryption='psk2'
+        uci set wireless.default_radio2.key="${WRT_WORD}"
+
+        uci commit wireless
+        exit 0
+        EOF
+        chmod +x package/base-files/files/etc/uci-defaults/99-custom-wifi
 
     - name: Compile Firmware(开始编译固件)
       id: compile
