@@ -95,14 +95,28 @@ jobs:
     - name: Initialization Environment(初始化环境)
       env:
         DEBIAN_FRONTEND: noninteractive
+      timeout-minutes: 15 # 强制设定本步骤最多运行 15 分钟，防止死等
       run: |
-        sudo -E apt-get -y update
-        sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
+        # 1. 替换为微软 Azure 内部镜像源（解决 archive.ubuntu.com 卡死挂起问题）
+        sudo sed -i 's/archive.ubuntu.com/azure.archive.ubuntu.com/g' /etc/apt/sources.list
+        sudo sed -i 's/security.ubuntu.com/azure.archive.ubuntu.com/g' /etc/apt/sources.list
+
+        # 2. 增加连接超时限制 (-o Acquire::...=10) 与重试，即使遇到坏节点也能自动跳过重试
+        sudo -E apt-get -o Acquire::http::Timeout="10" -o Acquire::Retries="3" -y update
+
+        # 3. 安装依赖（兼容 Ubuntu 22.04/24.04 新旧版本软件包）
+        sudo -E apt-get -o Acquire::http::Timeout="10" -o Acquire::Retries="3" -y install \
+          ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
           bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
           git gperf haveged help2man intltool jq libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev \
-          libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libfuse-dev libssl-dev libtool lrzsz \
+          libmpc-dev libmpfr-dev libncurses-dev libreadline-dev libfuse-dev libssl-dev libtool lrzsz \
           genisoimage msmtp nano ninja-build p7zip p7zip-full patch pkgconf python3 python3-pip libpython3-dev qemu-utils \
           rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+
+        # 4. 清理 apt 缓存释放空间
+        sudo -E apt-get clean
+
+        # 5. 重载系统服务与时区
         sudo -E systemctl daemon-reload
         sudo timedatectl set-timezone "$TZ"
 
