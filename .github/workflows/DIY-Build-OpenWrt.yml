@@ -199,7 +199,12 @@ jobs:
         chmod +x "$GITHUB_WORKSPACE/$DIY_SCRIPT"
         cd "$OPENWRT_PATH"
         "$GITHUB_WORKSPACE/$DIY_SCRIPT"
-
+        
+    - name: Custom Packages
+      run: |
+        cd ./wrt/package/
+        $GITHUB_WORKSPACE/Scripts/Handles.sh
+        
     - name: Download DL Package(下载DL软件包)
       env:
         CONFIG_FILE: ${{ inputs.config_file }}
