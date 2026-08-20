@@ -3,14 +3,14 @@ sed -i 's/downloads.immortalwrt.kyarucloud.moe/mirror.nju.edu.cn\/immortalwrt/g'
 sed -i 's/downloads.immortalwrt.org/mirror.nju.edu.cn\/immortalwrt/g' package/base-files/image-config.in
 
 # 修改默认IP & 固件名称 & 编译署名和时间
-#sed -i 's/192.168.1.1/192.168.9.1/g' package/base-files/files/bin/config_generate
+# sed -i 's/192.168.1.1/192.168.9.1/g' package/base-files/files/bin/config_generate
 # sed -i "s/hostname='.*'/hostname='Roc'/g" package/base-files/files/bin/config_generate
 
 #修改immortalwrt.lan关联IP
 #sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 
 CFG_FILE="./package/base-files/files/bin/config_generate"
-#修改默认IP地址
+# 修改默认IP地址
 # 如果 $WRT_IP 为空，则取默认值 192.168.1.1
 TARGET_IP="${WRT_IP:-192.168.9.1}"
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/$TARGET_IP/g" $CFG_FILE
@@ -28,7 +28,7 @@ sed -i "s#_('Firmware Version'), (L\.isObject(boardinfo\.release) ? boardinfo\.r
                 href: 'https://github.com/laipeng668/openwrt-ci-roc/releases',\n \
                 target: '_blank',\n \
                 rel: 'noopener noreferrer'\n \
-                }, [ 'Built by Roc $(date "+%Y-%m-%d %H:%M:%S")' ])\n \
+                }, [ 'Built by zzg $(date "+%Y-%m-%d %H:%M:%S")' ])\n \
             ]),#" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
 # 更改默认 Shell 为 zsh 未安装zsh会导致SSH、SCP无法登录
@@ -114,7 +114,8 @@ git clone --depth=1 https://github.com/vernesong/OpenClash package/luci-app-open
 # 清理 PassWall 的 chnlist 规则文件
 echo "baidu.com"  > package/luci-app-passwall/luci-app-passwall/root/usr/share/passwall/rules/chnlist
 
-#安装和更新软件包  # Copyright (C) 2026 VIKINGYFY
+
+#安装和更新软件包  # Copyright (C) 2026 VIKINGYFY  ——from https://github.com/VIKINGYFY/OpenWRT-CI/blob/main/Scripts/Packages.sh
 UPDATE_PACKAGE() {
 	local PKG_NAME=$1
 	local PKG_REPO=$2
@@ -159,19 +160,16 @@ UPDATE_PACKAGE() {
 # UPDATE_PACKAGE "open-app-filter" "destan19/OpenAppFilter" "master" "" "luci-app-appfilter oaf" 这样会把原有的open-app-filter，luci-app-appfilter，oaf相关组件删除，不会出现coremark错误。
 
 # UPDATE_PACKAGE "包名" "项目地址" "项目分支" "pkg/name，可选，pkg为从大杂烩中单独提取包名插件；name为重命名为包名"
-UPDATE_PACKAGE "argon" "sbwml/luci-theme-argon" "openwrt-25.12"
-UPDATE_PACKAGE "shadcn" "eamonxg/luci-theme-shadcn" "main"
+# UPDATE_PACKAGE "argon" "sbwml/luci-theme-argon" "openwrt-25.12"  有另一版本
+
+# theme
 UPDATE_PACKAGE "aurora" "eamonxg/luci-theme-aurora" "master"
 UPDATE_PACKAGE "aurora-config" "eamonxg/luci-app-aurora-config" "master"
 UPDATE_PACKAGE "kucat" "sirpdboy/luci-theme-kucat" "master"
 UPDATE_PACKAGE "kucat-config" "sirpdboy/luci-app-kucat-config" "master"
-
-UPDATE_PACKAGE "homeproxy" "VIKINGYFY/homeproxy" "main"
-UPDATE_PACKAGE "momo" "nikkinikki-org/OpenWrt-momo" "main"
-UPDATE_PACKAGE "nikki" "nikkinikki-org/OpenWrt-nikki" "main"
-UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
-UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
-UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
+UPDATE_PACKAGE "noobwrt" "nooblk-98/luci-theme-noobwrt" "master"
+UPDATE_PACKAGE "shadcn" "eamonxg/luci-theme-shadcn" "main"
+UPDATE_PACKAGE "theme-fluent" "LazuliKao/luci-theme-fluent" "main"
 
 UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 
@@ -183,7 +181,7 @@ UPDATE_PACKAGE "easytier" "EasyTier/luci-app-easytier" "main"
 UPDATE_PACKAGE "mosdns" "sbwml/luci-app-mosdns" "v5" "" "v2dat"
 UPDATE_PACKAGE "netspeedtest" "sirpdboy/netspeedtest" "main" "" "homebox ookla-speedtest"
 UPDATE_PACKAGE "netwizard" "sirpdboy/luci-app-netwizard" "main"
-UPDATE_PACKAGE "openlist2" "sbwml/luci-app-openlist2" "main"
+# UPDATE_PACKAGE "openlist2" "sbwml/luci-app-openlist2" "main"
 UPDATE_PACKAGE "partexp" "sirpdboy/luci-app-partexp" "main"
 UPDATE_PACKAGE "qbittorrent" "sbwml/luci-app-qbittorrent" "master" "" "qt6base qt6tools rblibtorrent"
 UPDATE_PACKAGE "qmodem" "FUjr/QModem" "main"
@@ -192,6 +190,7 @@ UPDATE_PACKAGE "timecontrol" "sirpdboy/luci-app-timecontrol" "main"
 UPDATE_PACKAGE "viking" "VIKINGYFY/packages" "main" "" "gecoosac luci-app-timewol luci-app-wolplus"
 UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 
+# end https://github.com/VIKINGYFY/OpenWRT-CI/blob/main/Scripts/Packages.sh
 
 #  from  OpenWRT-CI-breeze303/diy-script.sh
 # 添加额外插件
@@ -201,25 +200,23 @@ git clone --depth=1 https://github.com/esirplayground/luci-app-poweroff package/
 git clone --depth=1 https://github.com/destan19/OpenAppFilter package/OpenAppFilter
 
 git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
-git_sparse_clone openwrt-18.06 https://github.com/immortalwrt/luci applications/luci-app-eqos
+git_sparse_clone openwrt-25.12 https://github.com/immortalwrt/luci applications/luci-app-eqos
 
 # 科学上网插件
 #git clone --depth=1 -b main https://github.com/fw876/helloworld package/luci-app-ssr-plus
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
-#git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
-#git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
 git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
+UPDATE_PACKAGE "homeproxy" "VIKINGYFY/homeproxy" "main"
+UPDATE_PACKAGE "momo" "nikkinikki-org/OpenWrt-momo" "main"
+UPDATE_PACKAGE "nikki" "nikkinikki-org/OpenWrt-nikki" "main"
+#UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
 
-# Themes
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
+# Themes太旧恐不兼容
+#git clone --depth=1 https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom package/luci-theme-infinityfreedom
+#git_sparse_clone main https://github.com/haiibo/packages luci-theme-atmaterial luci-theme-opentomcat luci-theme-netgear
 
 
 # 更改 Argon 主题背景
 cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
-
-# MosDNS
-git clone --depth=1 https://github.com/sbwml/luci-app-mosdns package/luci-app-mosdns
 
 # Alist
 git clone --depth=1 https://github.com/sbwml/luci-app-alist package/luci-app-alist
@@ -231,6 +228,29 @@ git_sparse_clone master https://github.com/linkease/nas-packages network/service
 # iStore
 git_sparse_clone main https://github.com/linkease/istore-ui app-store-ui
 git_sparse_clone main https://github.com/linkease/istore luci
+
+
+# 晶晨宝盒
+git_sparse_clone main https://github.com/ophub/luci-app-amlogic luci-app-amlogic
+sed -i "s|firmware_repo.*|firmware_repo 'https://github.com/haiibo/OpenWrt'|g" package/luci-app-amlogic/root/etc/config/amlogic
+# sed -i "s|kernel_path.*|kernel_path 'https://github.com/ophub/kernel'|g" package/luci-app-amlogic/root/etc/config/amlogic
+sed -i "s|ARMv8|ARMv8_PLUS|g" package/luci-app-amlogic/root/etc/config/amlogic
+
+# SmartDNS
+git clone --depth=1 -b lede https://github.com/pymumu/luci-app-smartdns package/luci-app-smartdns
+git clone --depth=1 https://github.com/pymumu/openwrt-smartdns package/smartdns
+
+# msd_lite
+git clone --depth=1 https://github.com/ximiTech/luci-app-msd_lite package/luci-app-msd_lite
+git clone --depth=1 https://github.com/ximiTech/msd_lite package/msd_lite
+
+git clone --depth=1 https://github.com/adminchenyu/eMMC-Health
+
+# 在线用户
+git_sparse_clone main https://github.com/haiibo/packages luci-app-onliner
+sed -i '$i uci set nlbwmon.@nlbwmon[0].refresh_interval=2s' package/lean/default-settings/files/zzz-default-settings
+sed -i '$i uci commit nlbwmon' package/lean/default-settings/files/zzz-default-settings
+chmod 755 package/luci-app-onliner/root/usr/share/onliner/setnlbw.sh
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
