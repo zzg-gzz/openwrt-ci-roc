@@ -202,7 +202,7 @@ jobs:
         
     - name: Custom Packages
       run: |
-        cd ./wrt/package/
+        cd "$OPENWRT_PATH"/package/
         $GITHUB_WORKSPACE/Scripts/Handles.sh
         
     - name: Download DL Package(下载DL软件包)
