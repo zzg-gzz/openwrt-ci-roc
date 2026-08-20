@@ -217,26 +217,30 @@ jobs:
         mkdir -p package/base-files/files/etc/uci-defaults/
         cat << 'EOF' > package/base-files/files/etc/uci-defaults/99-custom-wifi
         #!/bin/sh
+        # 强制先生成默认的 wireless 配置文件（如果尚未生成）
+        [ ! -f /etc/config/wireless ] && wifi config
 
-        # radio0
+        # 1. 禁用所有无线的 disabled 标志 (开启 WiFi)
         uci set wireless.radio0.disabled='0'
-        uci set wireless.default_radio0.ssid="${WRT_SSID}"
-        uci set wireless.default_radio0.encryption='psk2'
-        uci set wireless.default_radio0.key="${WRT_WORD}"
-
-        # radio1
         uci set wireless.radio1.disabled='0'
-        uci set wireless.default_radio1.ssid="${WRT_SSID}_5G"
-        uci set wireless.default_radio1.encryption='psk2'
-        uci set wireless.default_radio1.key="${WRT_WORD}"
-
-        # radio2
         uci set wireless.radio2.disabled='0'
-        uci set wireless.default_radio2.ssid="${WRT_SSID}_5G2"
-        uci set wireless.default_radio2.encryption='psk2'
-        uci set wireless.default_radio2.key="${WRT_WORD}"
 
+        # 2. 按 radio 编号精准设置 SSID 和密码 (自动匹配对应的 wifi-iface)
+        uci set wireless.@wifi-iface[0].ssid="${WRT_SSID}"
+        uci set wireless.@wifi-iface[0].encryption='psk2'
+        uci set wireless.@wifi-iface[0].key="${WRT_WORD}"
+
+        uci set wireless.@wifi-iface[1].ssid="${WRT_SSID}_5G"
+        uci set wireless.@wifi-iface[1].encryption='psk2'
+        uci set wireless.@wifi-iface[1].key="${WRT_WORD}"
+
+        uci set wireless.@wifi-iface[2].ssid="${WRT_SSID}_5G2"
+        uci set wireless.@wifi-iface[2].encryption='psk2'
+        uci set wireless.@wifi-iface[2].key="${WRT_WORD}"
+
+        # 提交修改
         uci commit wireless
+
         exit 0
         EOF
         chmod +x package/base-files/files/etc/uci-defaults/99-custom-wifi
