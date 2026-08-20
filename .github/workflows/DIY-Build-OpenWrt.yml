@@ -203,7 +203,7 @@ jobs:
     - name: Custom Packages
       run: |
         cd "$OPENWRT_PATH"/package/
-        $GITHUB_WORKSPACE/Scripts/Handles.sh
+        "$GITHUB_WORKSPACE/scripts/Handles.sh"
         
     - name: Download DL Package(下载DL软件包)
       env:
